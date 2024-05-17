@@ -1,0 +1,110 @@
+[gd_scene load_steps=7 format=3 uid="uid://bx2tqbm3wef8n"]
+
+[ext_resource type="Script" path="res://scenes/cardui/cardui.gd" id="1_lfqky"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="2_bpfif"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="3_wgujk"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="4_ch0or"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="5_ejt00"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ihctm"]
+size = Vector2(150, 175)
+
+[node name="CardUI" type="Control" node_paths=PackedStringArray("color", "state", "state_chart", "drop_point_detector")]
+custom_minimum_size = Vector2(150, 175)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1770.0
+offset_bottom = -905.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lfqky")
+color = NodePath("Color")
+state = NodePath("State")
+state_chart = NodePath("StateChart")
+drop_point_detector = NodePath("DropPointDetector")
+
+[node name="Color" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0.19, 0.0506667, 1)
+
+[node name="State" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 17
+text = "State"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DropPointDetector" type="Area2D" parent="."]
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DropPointDetector"]
+position = Vector2(75, 87.5)
+shape = SubResource("RectangleShape2D_ihctm")
+
+[node name="StateChart" type="Node" parent="."]
+script = ExtResource("2_bpfif")
+
+[node name="CompoundState" type="Node" parent="StateChart"]
+script = ExtResource("3_wgujk")
+initial_state = NodePath("Base")
+
+[node name="Base" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("4_ch0or")
+
+[node name="To Clicked" type="Node" parent="StateChart/CompoundState/Base"]
+script = ExtResource("5_ejt00")
+to = NodePath("../../Clicked")
+event = &"card_clicked"
+
+[node name="Clicked" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("4_ch0or")
+
+[node name="To Dragging" type="Node" parent="StateChart/CompoundState/Clicked"]
+script = ExtResource("5_ejt00")
+to = NodePath("../../Dragging")
+event = &"card_dragging"
+
+[node name="Dragging" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("4_ch0or")
+
+[node name="To Base" type="Node" parent="StateChart/CompoundState/Dragging"]
+script = ExtResource("5_ejt00")
+to = NodePath("../../Base")
+event = &"card_canceled"
+
+[node name="To Released" type="Node" parent="StateChart/CompoundState/Dragging"]
+script = ExtResource("5_ejt00")
+to = NodePath("../../Released")
+event = &"card_released"
+
+[node name="Released" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("4_ch0or")
+
+[node name="To Base" type="Node" parent="StateChart/CompoundState/Released"]
+script = ExtResource("5_ejt00")
+to = NodePath("../../Base")
+event = &"card_canceled"
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="area_entered" from="DropPointDetector" to="." method="_on_drop_point_detector_area_entered"]
+[connection signal="area_exited" from="DropPointDetector" to="." method="_on_drop_point_detector_area_exited"]
+[connection signal="state_entered" from="StateChart/CompoundState/Base" to="." method="_on_base_state_entered"]
+[connection signal="state_entered" from="StateChart/CompoundState/Clicked" to="." method="_on_clicked_state_entered"]
+[connection signal="state_input" from="StateChart/CompoundState/Clicked" to="." method="_on_clicked_state_input"]
+[connection signal="state_entered" from="StateChart/CompoundState/Dragging" to="." method="_on_dragging_state_entered"]
+[connection signal="state_input" from="StateChart/CompoundState/Dragging" to="." method="_on_dragging_state_input"]
+[connection signal="state_entered" from="StateChart/CompoundState/Released" to="." method="_on_released_state_entered"]

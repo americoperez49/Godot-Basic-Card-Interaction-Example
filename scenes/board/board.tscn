@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=3 uid="uid://cuqyfwwktduwu"]
+
+[ext_resource type="Texture2D" uid="uid://dnofp1uxvr7ws" path="res://images/Board.png" id="1_2ywwu"]
+[ext_resource type="Texture2D" uid="uid://jgt025fogw7t" path="res://images/Terrain.jpg" id="1_jx5f3"]
+[ext_resource type="Script" path="res://scenes/board/hand.gd" id="3_h0vtp"]
+[ext_resource type="PackedScene" uid="uid://bx2tqbm3wef8n" path="res://scenes/cardui/cardui.tscn" id="3_l3k8g"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6oovh"]
+size = Vector2(1904, 808)
+
+[node name="Board" type="Node2D"]
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(954.645, 542.645)
+scale = Vector2(1.02081, 0.577801)
+texture = ExtResource("1_jx5f3")
+
+[node name="Playmat" type="Sprite2D" parent="."]
+position = Vector2(964, 512)
+scale = Vector2(0.247743, 0.18277)
+texture = ExtResource("1_2ywwu")
+
+[node name="CardDropArea" type="Area2D" parent="."]
+collision_layer = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CardDropArea"]
+position = Vector2(952, 412)
+shape = SubResource("RectangleShape2D_6oovh")
+
+[node name="UI" type="CanvasLayer" parent="." groups=["ui_layer"]]
+
+[node name="Hand" type="HBoxContainer" parent="UI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -375.0
+offset_top = -175.0
+offset_right = 375.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+script = ExtResource("3_h0vtp")
+
+[node name="CardUI" parent="UI/Hand" instance=ExtResource("3_l3k8g")]
+layout_mode = 2
+
+[node name="CardUI2" parent="UI/Hand" instance=ExtResource("3_l3k8g")]
+layout_mode = 2
+
+[node name="CardUI3" parent="UI/Hand" instance=ExtResource("3_l3k8g")]
+layout_mode = 2
