@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Card Drag Example Project"
+config/name="Godot-Basic-Card-Interaction-Example"
 run/main_scene="res://scenes/board/board.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
@@ -23,7 +23,7 @@ window/stretch/mode="viewport"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gdscript_formatter/plugin.cfg", "res://addons/godot_state_charts/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot_state_charts/plugin.cfg")
 
 [input]
 
