@@ -9,7 +9,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ihctm"]
 size = Vector2(150, 175)
 
-[node name="CardUI" type="Control" node_paths=PackedStringArray("color", "state", "state_chart", "drop_point_detector")]
+[node name="CardUI" type="Control" node_paths=PackedStringArray("color", "state", "state_chart", "drop_point_detector", "card_label")]
 custom_minimum_size = Vector2(150, 175)
 layout_mode = 3
 anchors_preset = 15
@@ -24,6 +24,7 @@ color = NodePath("Color")
 state = NodePath("State")
 state_chart = NodePath("StateChart")
 drop_point_detector = NodePath("DropPointDetector")
+card_label = NodePath("Label")
 
 [node name="Color" type="ColorRect" parent="."]
 layout_mode = 1
@@ -46,6 +47,15 @@ theme_override_font_sizes/font_size = 17
 text = "State"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Label" type="Label" parent="."]
+offset_left = 49.0
+offset_top = 21.0
+offset_right = 89.0
+offset_bottom = 44.0
+text = "1
+"
+horizontal_alignment = 1
 
 [node name="DropPointDetector" type="Area2D" parent="."]
 collision_mask = 2
@@ -91,6 +101,11 @@ script = ExtResource("5_ejt00")
 to = NodePath("../../Released")
 event = &"card_released"
 
+[node name="To Aiming" type="Node" parent="StateChart/CompoundState/Dragging"]
+script = ExtResource("5_ejt00")
+to = NodePath("../../Aiming")
+event = &"card_aiming"
+
 [node name="Released" type="Node" parent="StateChart/CompoundState"]
 script = ExtResource("4_ch0or")
 
@@ -98,6 +113,19 @@ script = ExtResource("4_ch0or")
 script = ExtResource("5_ejt00")
 to = NodePath("../../Base")
 event = &"card_canceled"
+
+[node name="Aiming" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("4_ch0or")
+
+[node name="To Base" type="Node" parent="StateChart/CompoundState/Aiming"]
+script = ExtResource("5_ejt00")
+to = NodePath("../../Base")
+event = &"card_canceled"
+
+[node name="To Released" type="Node" parent="StateChart/CompoundState/Aiming"]
+script = ExtResource("5_ejt00")
+to = NodePath("../../Released")
+event = &"card_released"
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="area_entered" from="DropPointDetector" to="." method="_on_drop_point_detector_area_entered"]
@@ -108,3 +136,6 @@ event = &"card_canceled"
 [connection signal="state_entered" from="StateChart/CompoundState/Dragging" to="." method="_on_dragging_state_entered"]
 [connection signal="state_input" from="StateChart/CompoundState/Dragging" to="." method="_on_dragging_state_input"]
 [connection signal="state_entered" from="StateChart/CompoundState/Released" to="." method="_on_released_state_entered"]
+[connection signal="state_entered" from="StateChart/CompoundState/Aiming" to="." method="_on_aiming_state_entered"]
+[connection signal="state_exited" from="StateChart/CompoundState/Aiming" to="." method="_on_aiming_state_exited"]
+[connection signal="state_input" from="StateChart/CompoundState/Aiming" to="." method="_on_aiming_state_input"]

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Deck" load_steps=4 format=3 uid="uid://q3gys1xjkdec"]
+
+[ext_resource type="Resource" uid="uid://dpddwatues0n0" path="res://characters/warrior/cards/warrior_axe_attack.tres" id="1_8ab7s"]
+[ext_resource type="Resource" uid="uid://bl5ttopd4euyq" path="res://characters/warrior/cards/warrior_block.tres" id="2_hhs1q"]
+[ext_resource type="Script" path="res://custom_resources/deck.gd" id="3_5ddor"]
+
+[resource]
+script = ExtResource("3_5ddor")
+cards = Array[Resource("res://custom_resources/card.gd")]([ExtResource("1_8ab7s"), ExtResource("1_8ab7s"), ExtResource("1_8ab7s"), ExtResource("2_hhs1q"), ExtResource("2_hhs1q"), ExtResource("2_hhs1q")])
